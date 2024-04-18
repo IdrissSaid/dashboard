@@ -1,0 +1,15 @@
+[
+  {
+    "name": "weather",
+    "widgets": [{
+      "name": "city_temperature",
+      "description": "Display temperature for a city",
+      "params" : [
+        {
+          "name": "city",
+          "type": "string"
+        }
+      ]
+    }]
+  }
+]

@@ -1,0 +1,22 @@
+import { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
+
+export async function GET(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    const ipAddress = await fetch(`${process.env.SERVER_HOST}/api/host`, { method: 'GET' });
+    const currentTime = await fetch(`${process.env.SERVER_HOST}/api/current_time`, { method: 'GET' });
+
+    if (!ipAddress.ok) {
+      throw new Error('Failed to fetch data');
+    }
+    return NextResponse.json({
+      "client": await ipAddress.json().then(res => res.data),
+      "server": {
+        "current_time": await currentTime.json().then(res => res.data)
+      }
+    }, { status: 200 });
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return NextResponse.error();
+  }
+}
