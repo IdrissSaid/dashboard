@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const ipAddress = await fetch(`${process.env.SERVER_HOST}/api/host`, { method: 'GET' });
-    const currentTime = await fetch(`${process.env.SERVER_HOST}/api/current_time`, { method: 'GET' });
+    const ipAddress = await fetch(`${process.env.SERVER_HOST}/host`, { method: 'GET' });
+    const currentTime = await fetch(`${process.env.SERVER_HOST}/current_time`, { method: 'GET' });
 
     if (!ipAddress.ok) {
       throw new Error('Failed to fetch data');
