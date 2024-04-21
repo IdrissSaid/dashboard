@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import WidgetSchema from "@/Model/Widget";
 
 const ServiceSchema = new mongoose.Schema({
   name: String,

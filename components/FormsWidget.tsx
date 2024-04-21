@@ -11,41 +11,18 @@ import {
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 import { Select, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel, SelectContent } from "./ui/select"
-import { IParam } from "@/app/api/services/interfaces"
+import { IParam, IService } from "@/app/api/services/interfaces"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
+import UniversalInput from "./UniversalInput"
 
-const UniversalInput = ({ param, onChange } : { param: IParam, onChange: (event: any) => void }) => {
-  return (
-    <div>
-      <Label htmlFor={param.desc}>{param.desc}</Label>
-      {(param.type === "string") ? <Input id={param.desc} required onChange={onChange}/> : null}
-    </div>
-  )
-}
-
-const FormsWidget = ({ service }: { service : string }) => {
-  const availaibleWidgets = [
-    {
-      name: "City Temperature",
-      description: "Display temperature for a city",
-      path : "current.json",
-      type : "GET",
-      params : [
-        {
-          name: "q",
-          desc: "City",
-          type: "string"
-        }
-      ]
-    }
-  ]
+const FormsWidget = ({ service }: { service : IService }) => {
   const [ selectedWidget, setSelectedWidget] = useState<string | null>(null)
   const form = useForm()
   async function onSubmit(values: any) {
     if (!selectedWidget) return
-    const widget = availaibleWidgets.find(widget => widget.name === selectedWidget)
+    const widget = service.widgets.find(widget => widget.name === selectedWidget)
     if (!widget) return
     const body = []
 
@@ -59,7 +36,7 @@ const FormsWidget = ({ service }: { service : string }) => {
         key = key.split('-')[1];
       body.push({ key, value });
     });
-    const res = await fetch(`api/services/service`, {
+    const res = await fetch(`api/services/savedService`, {
       method: 'POST',
       body: JSON.stringify(body)
     })
@@ -72,7 +49,7 @@ const FormsWidget = ({ service }: { service : string }) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader>
-            <CardTitle>Ajouter un widget</CardTitle>
+            <CardTitle>Ajouter un widget du service {service.name}</CardTitle>
             <CardDescription>Ajouter votre widget préféré en un clic</CardDescription>
           </CardHeader>
           <CardContent>
@@ -104,7 +81,7 @@ const FormsWidget = ({ service }: { service : string }) => {
                         <SelectValue placeholder="Sélectionner un widget" />
                       </SelectTrigger>
                       <SelectContent>
-                        {availaibleWidgets.map((widget, index) => {
+                        {service.widgets.map((widget, index) => {
                           return <SelectItem key={widget.name} value={widget.name}>{widget.name}</SelectItem>
                         })}
                       </SelectContent>
@@ -119,7 +96,7 @@ const FormsWidget = ({ service }: { service : string }) => {
             />
             <div>
               { selectedWidget &&
-                availaibleWidgets.find(widget => widget.name === selectedWidget)?.params.map((param, index) => {
+                service.widgets.find(widget => widget.name === selectedWidget)?.params.map((param, index) => {
                   return (
                     <FormField
                       key={param.name}
