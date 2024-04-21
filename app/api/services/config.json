@@ -1,27 +1,11 @@
 [
   {
-    "name": "weather2",
-    "endpoint": "http://localhost:3000/api/",
-    "apiKey": "hello",
-    "widgets": [{
-      "name": "city_temperature",
-      "description": "Display temperature for a city",
-      "path" : "current_time",
-      "params" : [
-        {
-          "name": "city",
-          "type": "string"
-        }
-      ]
-    }]
-  },
-  {
     "name": "weather",
     "endpoint": "http://api.weatherapi.com/v1/",
     "apiKey": { "key": "b0a2912b458a4027aaf153649241804" },
     "widgets": [
       {
-        "name": "city_temperature",
+        "name": "City Temperature",
         "description": "Display temperature for a city",
         "path" : "current.json",
         "type" : "GET",
