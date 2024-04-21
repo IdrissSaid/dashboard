@@ -12,7 +12,7 @@ export interface IWidget {
   params: IParam[];
 }
 
-export interface ISevice {
+export interface IService {
   name: string;
   apiKey: string;
   endpoint: string;

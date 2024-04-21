@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from 'fs';
 import path from 'path';
-import { ISevice, IWidget } from "../interfaces";
+import { IService, IWidget } from "../interfaces";
 import connectDB from "@/lib/connectDB"
 import Service from "@/Model/Service";
 
@@ -28,7 +28,7 @@ async function executeWidget(endpoint: string, apiKey: string, widget: IWidget, 
   return null
 }
 
-async function parseSevices(services: ISevice[], params: IParams[]) {
+async function parseSevices(services: IService[], params: IParams[]) {
   const paramService = params.find(param => param.key == "service")?.value || "";
   const paramWidget = params.find(param => param.key == "widget")?.value || "";
   const service = services.find(service => service.name === paramService);
