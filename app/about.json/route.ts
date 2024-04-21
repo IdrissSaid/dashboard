@@ -1,7 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: NextRequest, res: NextResponse) {
   try {
     const ipAddress = await fetch(`${process.env.SERVER_HOST}/host`, { method: 'GET' });
     const currentTime = await fetch(`${process.env.SERVER_HOST}/current_time`, { method: 'GET' });
