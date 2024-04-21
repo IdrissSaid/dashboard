@@ -1,5 +1,6 @@
 export interface IParam {
   name: string;
+  desc: string;
   type: string;
 }
 

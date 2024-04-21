@@ -1,58 +1,52 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { NextResponse } from "next/server";
-import fs from 'fs';
-import path from 'path';
-import { ISevice, IWidget } from "../interfaces";
+import { NextRequest, NextResponse } from "next/server";
+import connectDB from "@/lib/connectDB"
+import Service from "@/Model/Service";
+import Widget from "@/Model/Widget";
 
-interface IParams {
-  key: string;
-  value: string;
-}
+export async function POST(req: NextRequest, res: NextResponse) {
+  await connectDB();
 
-const filePath = path.join(process.cwd(), 'app/api/services/config.json');
-
-async function get(endpoint: string, apiKey: string, widget: IWidget, params: IParams[]) {
-  const reqParams = params.filter(item => item.key !== 'service' && item.key !== 'widget').map(item => {
-      return Object.values(item).join('=')
-  }).join('&');
-
-  return await fetch(`${endpoint}${widget.path}?${apiKey}&${reqParams}`, {
-    method: widget.type,
-  })
-}
-
-async function executeWidget(endpoint: string, apiKey: string, widget: IWidget, params: IParams[]) {
-  if (widget.type === 'GET')
-    return await get(endpoint, apiKey, widget, params);
-  return null
-}
-
-async function parseSevices(services: ISevice[], params: IParams[]) {
-  const paramService = params.find(param => param.key == "service")?.value || "";
-  const paramWidget = params.find(param => param.key == "widget")?.value || "";
-  const service = services.find(service => service.name === paramService);
-  if (!service) return null;
-  const widget = service.widgets.find(widget => widget.name === paramWidget);
-  if (!widget) return null;
-
-  const apiKey = Object.entries(service.apiKey).map(([key, value]) => `${key}=${value}`)[0]
-  const res = await executeWidget(service.endpoint, apiKey, widget, params)
-  const data = await res?.json()
-  console.log(data)
-}
-
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const services = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-    const params : IParams[] = [
-      { key: "q", value: "reunion" },
-      { key: "widget", value: "city_temperature" },
-      { key: "service", value: "weather" },
-    ]
-    await parseSevices(services, params)
-    return NextResponse.json({ data: services }, { status: 200 });
+    const service = await Service.create({
+      name: "weather",
+      endpoint: "http://api.weatherapi.com/v1/",
+      apiKey: {
+        key: "b0a2912b458a4027aaf153649241804"
+      },
+    });
+
+    const widget = await Widget.create({
+      name: "City Temperature",
+      description: "Display temperature for a city",
+      path: "current.json",
+      type: "GET",
+      params: [
+        {
+          name: "q",
+          desc: "City",
+          type: "string"
+        }
+      ]
+    });
+
+    await Service.findByIdAndUpdate(
+      service._id,
+      { $push: { widgets: widget } },
+      { new: true }
+    );
+
+    return NextResponse.json({ data: service }, { status: 201 });
   } catch (error) {
-    console.error('Error reading JSON file:', error);
-    return NextResponse.json({ message: error }, { status: 500 });
+    return NextResponse.json({ message: "Failed to create service" }, { status: 500 });
+  }
+}
+
+export async function GET(req: NextRequest, res: NextResponse) {
+  try {
+      await connectDB();
+      const services = await Service.find().populate("widgets");
+      return NextResponse.json({ data: services });
+  } catch (error) {
+      return NextResponse.json({ message: error });
   }
 }
