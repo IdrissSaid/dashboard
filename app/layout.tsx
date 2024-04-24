@@ -3,6 +3,8 @@ import { Inter as FontSans } from "next/font/google"
 import "./globals.css";
 import { cn } from "@/lib/utils"
 import { Suspense } from "react";
+import 'react-toastify/dist/ReactToastify.css';
+import { Bounce, ToastContainer } from 'react-toastify';
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -29,6 +31,19 @@ export default function RootLayout({
       <Suspense fallback={<div className="w-screen h-screen items-center justify-center">Chargement...</div>}>
         {children}
       </Suspense>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+        />
       </body>
     </html>
   );
