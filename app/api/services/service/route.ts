@@ -8,7 +8,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   try {
     const service = await Service.create({
-      name: "weather",
+      name: "Meteo",
       endpoint: "http://api.weatherapi.com/v1/",
       apiKey: {
         key: "b0a2912b458a4027aaf153649241804"

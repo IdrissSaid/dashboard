@@ -9,24 +9,26 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Input } from "./ui/input"
-import { Label } from "./ui/label"
-import { Select, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel, SelectContent } from "./ui/select"
-import { IParam, IService } from "@/app/api/services/interfaces"
+import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "./ui/select"
+import { IService } from "@/app/api/services/interfaces"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
 import UniversalInput from "./UniversalInput"
+import { Bounce, toast } from "react-toastify"
+import { useRouter } from 'next/navigation'
 
 const FormsWidget = ({ service }: { service : IService }) => {
   const [ selectedWidget, setSelectedWidget] = useState<string | null>(null)
   const form = useForm()
+  const router = useRouter()
   async function onSubmit(values: any) {
     if (!selectedWidget) return
     const widget = service.widgets.find(widget => widget.name === selectedWidget)
     if (!widget) return
     const body = []
-
-    body.push({ key: 'service', value: service })
+    body.push({ key: 'Widget Name', value: values.name})
+    body.push({ key: 'service', value: service.name })
     body.push({ key: 'widget', value: widget.name })
     const params = Object.entries(values)
     .map(([key, value]) => [key, value])
@@ -40,9 +42,32 @@ const FormsWidget = ({ service }: { service : IService }) => {
       method: 'POST',
       body: JSON.stringify(body)
     })
-    if (!res.ok) return
-    const data = await res.json()
-    console.log(data)
+    if (!res.ok) {
+      toast.error('Une erreur est survenue!', {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+        });
+    } else {
+      toast.success('Votre widget viens d\'être crée!', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    }
+    router.push('/')
   }
   return (
     <Card className="w-1/2">

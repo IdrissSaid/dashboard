@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from 'fs';
 import path from 'path';
 import { IService, IWidget } from "../interfaces";
 import connectDB from "@/lib/connectDB"
 import Service from "@/Model/Service";
+import SavedService from "@/Model/SavedService";
 
 interface IParams {
   key: string;
@@ -43,19 +43,14 @@ async function parseSevices(services: IService[], params: IParams[]) {
 
 export async function POST(req: NextRequest, res: NextResponse) {
   await connectDB();
-  const service = await Service.create({
-    name: 'service', endpoint: 'http://localhost'
-  })
-  // try {
-  //   const services = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-  //   const body = await req.json();
-  //   console.log(body)
-  //   const res = await parseSevices(services, body)
-  //   return NextResponse.json({ data: res }, { status: 200 });
-  // } catch (error) {
-  //   console.error('Error reading JSON file:', error);
-  //   return NextResponse.json({ message: error }, { status: 500 });
-  // }
+  try {
+    const body = await req.json();
+    const service = await SavedService.create({data:body})
+    return NextResponse.json({ service }, { status: 200 });
+  } catch (error) {
+    console.error('Error reading JSON file:', error);
+    return NextResponse.json({ message: error }, { status: 500 });
+  }
 }
 
 export async function GET(req: NextRequest, res: NextResponse) {
