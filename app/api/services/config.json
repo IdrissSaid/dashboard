@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Meteo",
+    "endpoint": "http://api.weatherapi.com/v1/",
+    "apiKey": { "key": "b0a2912b458a4027aaf153649241804" },
+    "widgets": [
+      {
+        "name": "City Temperature",
+        "description": "Display temperature for a city",
+        "path" : "current.json",
+        "type" : "GET",
+        "params" : [
+          {
+            "name": "q",
+            "desc": "City",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  }
+]
