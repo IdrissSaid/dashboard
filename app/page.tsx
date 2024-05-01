@@ -1,10 +1,11 @@
-import Link from "next/link";
+'use client'
 
-export default function Home() {
-  return (
-    <div>
-      <h1>Bienvenue</h1>
-      <Link href={'/services'}>Voir les services</Link>
-    </div>
-  );
+import { useRouter } from "next/navigation"
+
+const Page = () => {
+  const router = useRouter()
+  router.push('/home')
+  return <></>
 }
+
+export default Page

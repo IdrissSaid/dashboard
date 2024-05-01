@@ -19,7 +19,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       name: "City Temperature",
       description: "Display temperature for a city",
       path: "current.json",
-      type: "GET",
+      method: "GET",
       params: [
         {
           name: "q",
