@@ -6,7 +6,7 @@ const UniversalInput = ({ param, onChange } : { param: IParam, onChange: (event:
   return (
     <div>
       <Label htmlFor={param.desc}>{param.desc}</Label>
-      {(param.type === "string") ? <Input id={param.desc} required onChange={onChange}/> : null}
+      {(param.type === "text" || param.type === "string") ? <Input id={param.desc} required onChange={onChange}/> : null}
     </div>
   )
 }

@@ -10,8 +10,11 @@ const WidgetSchema = new mongoose.Schema({
   name: String,
   description: String,
   path: String,
-  type: String,
+  method: String,
+  returnType: String,
   params: [WidgetParamSchema]
+}, {
+  timestamps: true
 });
 
 export default mongoose.models.Widget || mongoose.model("Widget", WidgetSchema);

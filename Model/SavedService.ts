@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
 const SavedServiceSchema = new mongoose.Schema({
-  data: [{key: String, value: String}]
+  data: [{key: String, value: String}],
+  result: {}
 }, {
   timestamps: true
 });

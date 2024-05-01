@@ -27,7 +27,7 @@ const FormsWidget = ({ service }: { service : IService }) => {
     const widget = service.widgets.find(widget => widget.name === selectedWidget)
     if (!widget) return
     const body = []
-    body.push({ key: 'Widget Name', value: values.name})
+    body.push({ key: 'Widget Name', value: values.name })
     body.push({ key: 'service', value: service.name })
     body.push({ key: 'widget', value: widget.name })
     const params = Object.entries(values)
@@ -38,13 +38,13 @@ const FormsWidget = ({ service }: { service : IService }) => {
         key = key.split('-')[1];
       body.push({ key, value });
     });
-    const res = await fetch(`api/services/savedService`, {
+    const res = await fetch(`api/services/savedServices`, {
       method: 'POST',
       body: JSON.stringify(body)
     })
     if (!res.ok) {
       toast.error('Une erreur est survenue!', {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -66,8 +66,8 @@ const FormsWidget = ({ service }: { service : IService }) => {
         theme: "light",
         transition: Bounce,
       });
+      router.push('/home')
     }
-    router.push('/')
   }
   return (
     <Card className="w-1/2">

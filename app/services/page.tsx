@@ -18,7 +18,6 @@ const Services = () => {
       }
       const data = await res.json()
       setServices(data.data)
-      console.log(data.data)
     }
     getData()
   }, [])
