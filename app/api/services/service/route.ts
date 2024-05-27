@@ -26,6 +26,19 @@ export async function POST(req: NextRequest, res: NextResponse) {
           desc: "City",
           type: "string"
         }
+      ],
+      results: [
+        { in: 'location' },
+        { name: 'string' },
+        { lat: 'string' },
+        { long: 'string' },
+        { localtime: 'string' },
+        { tz_id: 'string' },
+        { out: '' },
+        { in: 'current' },
+        { temp_c: 'string' },
+        { is_day: 'boolean', true: 'day', false: 'night' },
+        { out: '' },
       ]
     });
 

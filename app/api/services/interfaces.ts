@@ -11,6 +11,7 @@ export interface IWidget {
   type: string;
   method: string;
   params: IParam[];
+  results: [{}]
 }
 
 export interface IKeyValue {

@@ -29,7 +29,6 @@ async function executeWidget(endpoint: string, apiKey: string, widget: IWidget, 
 async function parseSavedServices(services: IService[], params: IParams[]) {
   const paramService = params.find(param => param.key == "service")?.value || "";
   const paramWidget = params.find(param => param.key == "widget")?.value || "";
-
   const service = services.find(service => service.name === paramService);
   if (!service) return null;
   const widget = service.widgets.find(widget => widget.name === paramWidget);
@@ -37,7 +36,44 @@ async function parseSavedServices(services: IService[], params: IParams[]) {
 
   const apiKey = Object.entries(service.apiKey).map(([key, value]) => `${key}=${value}`)[0]
   const res = await executeWidget(service.endpoint, apiKey, widget, params)
-  return await res?.json()
+  const data = await res?.json()
+  let path = [] as Array<string>
+  const dataRes = [] as any
+  // console.log(widget)
+  widget.results.map((result) => {
+    console.log(result)
+    let key = Object.keys(result)[0];
+    let value = Object.values(result)[0] as string;
+    console.log(key, value)
+    if (key === 'in') {
+      path.push(value)
+    } else if (key === 'out')
+      path = []
+    else {
+      if (path) {
+        let nestedProperty = path.reverse().join('.') + '.' + key;
+        let propertyValue = data.get()
+        console.log(path, nestedProperty, propertyValue)
+        if (value == 'boolean') {
+          const bValue = parseInt(propertyValue)
+          let vTrue = Object.values(result)[1];
+          let vFalse = Object.values(result)[2];
+          dataRes.push({[key] : bValue ? vTrue : vFalse, type: value})
+        } else
+          dataRes.push({[key] : propertyValue, type: value})
+      } else {
+        if (value == 'boolean') {
+          const bValue = parseInt(data[key])
+          let vTrue = Object.values(result)[1];
+          let vFalse = Object.values(result)[2];
+          dataRes.push({[key] : bValue ? vTrue : vFalse, type: value})
+        } else
+          dataRes.push({[key]: data[key], type: value})
+      }
+    }
+  })
+  // console.log(dataRes)
+  return dataRes
 }
 
 export async function POST(req: NextRequest, res: NextResponse) {

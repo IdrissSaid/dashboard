@@ -30,16 +30,19 @@ const SavedServices = () => {
           className="w-full"
         >
         <CarouselContent className="h-[450px] -mt-1">
-          {savedServices?.map((widget, index) => (
-            <CarouselItem key={index} className="pt-1 md:basis-1/4">
-              <Card className="py-4">
-                <CardTitle className="leading-7 [&:not(:first-child)]:mt-6 text-center">{getValueWithKey('Widget Name', widget.data)}</CardTitle>
-                <CardContent className="flex items-center justify-center p-6">
-                  <span className="text-3xl font-semibold">{}</span>
-                </CardContent>
-              </Card>
-            </CarouselItem>
-          ))}
+          {savedServices?.map((widget, index) => {
+            console.log(widget)
+            return (
+              <CarouselItem key={index} className="pt-1 md:basis-1/4">
+                <Card className="py-4">
+                  <CardTitle className="leading-7 [&:not(:first-child)]:mt-6 text-center">{getValueWithKey('Widget Name', widget.data)}</CardTitle>
+                  <CardContent className="flex items-center justify-center p-6">
+                    <span className="text-3xl font-semibold">{}</span>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+            )
+          })}
           </CarouselContent>
           <CarouselPrevious />
           <CarouselNext />
