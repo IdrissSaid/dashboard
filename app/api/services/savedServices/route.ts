@@ -9,6 +9,22 @@ interface IParams {
   value: string;
 }
 
+function objectToArray(obj: any, prefix = '') {
+  let result: any = [];
+  for (const key in obj) {
+    if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+      result = result.concat(objectToArray(obj[key], prefix + key + '.'));
+    } else {
+      result.push([prefix + key, obj[key]]);
+    }
+  }
+  return result;
+}
+
+function getLineByKey(array: any, key: any) {
+  return array.find((item: any) => item[0] === key);
+}
+
 async function get(endpoint: string, apiKey: string, widget: IWidget, params: IParams[]) {
   const filtredParams = params.filter(item => item.key !== 'service' && item.key !== 'Widget Name' && item.key !== 'widget')
   const reqParams = filtredParams.map(item => {
@@ -36,15 +52,14 @@ async function parseSavedServices(services: IService[], params: IParams[]) {
 
   const apiKey = Object.entries(service.apiKey).map(([key, value]) => `${key}=${value}`)[0]
   const res = await executeWidget(service.endpoint, apiKey, widget, params)
-  const data = await res?.json()
+  const dataArray = objectToArray(await res?.json());
+
   let path = [] as Array<string>
   const dataRes = [] as any
-  // console.log(widget)
+
   widget.results.map((result) => {
-    console.log(result)
     let key = Object.keys(result)[0];
     let value = Object.values(result)[0] as string;
-    console.log(key, value)
     if (key === 'in') {
       path.push(value)
     } else if (key === 'out')
@@ -52,8 +67,8 @@ async function parseSavedServices(services: IService[], params: IParams[]) {
     else {
       if (path) {
         let nestedProperty = path.reverse().join('.') + '.' + key;
-        let propertyValue = data.get()
-        console.log(path, nestedProperty, propertyValue)
+        let propertyValue = getLineByKey(dataArray, nestedProperty)
+
         if (value == 'boolean') {
           const bValue = parseInt(propertyValue)
           let vTrue = Object.values(result)[1];
@@ -63,16 +78,16 @@ async function parseSavedServices(services: IService[], params: IParams[]) {
           dataRes.push({[key] : propertyValue, type: value})
       } else {
         if (value == 'boolean') {
-          const bValue = parseInt(data[key])
+          const bValue = parseInt(getLineByKey(dataArray, key))
           let vTrue = Object.values(result)[1];
           let vFalse = Object.values(result)[2];
           dataRes.push({[key] : bValue ? vTrue : vFalse, type: value})
         } else
-          dataRes.push({[key]: data[key], type: value})
+          dataRes.push({[key]: getLineByKey(dataArray, key), type: value})
       }
     }
   })
-  // console.log(dataRes)
+
   return dataRes
 }
 
