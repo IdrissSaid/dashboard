@@ -67,7 +67,7 @@ async function parseSavedServices(services: IService[], params: IParams[]) {
     else {
       if (path) {
         let nestedProperty = path.reverse().join('.') + '.' + key;
-        let propertyValue = getLineByKey(dataArray, nestedProperty)
+        let propertyValue = getLineByKey(dataArray, nestedProperty)[1]
 
         if (value == 'boolean') {
           const bValue = parseInt(propertyValue)
@@ -78,12 +78,12 @@ async function parseSavedServices(services: IService[], params: IParams[]) {
           dataRes.push({[key] : propertyValue, type: value})
       } else {
         if (value == 'boolean') {
-          const bValue = parseInt(getLineByKey(dataArray, key))
+          const bValue = parseInt(getLineByKey(dataArray, key)[1])
           let vTrue = Object.values(result)[1];
           let vFalse = Object.values(result)[2];
           dataRes.push({[key] : bValue ? vTrue : vFalse, type: value})
         } else
-          dataRes.push({[key]: getLineByKey(dataArray, key), type: value})
+          dataRes.push({[key]: getLineByKey(dataArray, key)[1], type: value})
       }
     }
   })
