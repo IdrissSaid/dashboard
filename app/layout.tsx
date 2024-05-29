@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { Suspense } from "react";
 import 'react-toastify/dist/ReactToastify.css';
 import { Bounce, ToastContainer } from 'react-toastify';
+import Loading from "@/lib/Loading";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -28,7 +29,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-      <Suspense fallback={<div className="w-screen h-screen items-center justify-center">Chargement...</div>}>
+      <Suspense fallback={<Loading />}>
         {children}
       </Suspense>
       <ToastContainer

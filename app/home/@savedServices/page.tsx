@@ -1,9 +1,9 @@
 "use client"
 import { IKeyValue } from "@/app/api/services/interfaces"
-import getValueWithKey from "@/lib/getValueWithKey"
-import { Card, CardContent, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { useEffect, useState } from "react"
+import SavedServicesComponent from "@/components/SavedServicesComponent"
 
 const SavedServices = () => {
   const [ savedServices, setSavedServices ] = useState<IKeyValue[]>([])
@@ -30,16 +30,10 @@ const SavedServices = () => {
           className="w-full"
         >
         <CarouselContent className="h-[450px] -mt-1">
-          {savedServices?.map((widget, index) => {
-            console.log(widget)
+          {savedServices?.map((savedService, index) => {
             return (
               <CarouselItem key={index} className="pt-1 md:basis-1/4">
-                <Card className="py-4">
-                  <CardTitle className="leading-7 [&:not(:first-child)]:mt-6 text-center">{getValueWithKey('Widget Name', widget.data)}</CardTitle>
-                  <CardContent className="flex items-center justify-center p-6">
-                    <span className="text-3xl font-semibold">{}</span>
-                  </CardContent>
-                </Card>
+                <SavedServicesComponent savedService={savedService}/>
               </CarouselItem>
             )
           })}
