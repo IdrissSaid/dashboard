@@ -2,7 +2,7 @@ import SavedConfig from "@/Model/SavedConfig";
 import connectDB from "@/lib/connectDB";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(res: NextResponse, params: {params: {id: string}}) {
+export async function GET(req: NextRequest, params: {params: {id: string}}) {
   await connectDB();
   try {
     const id = params.params.id
