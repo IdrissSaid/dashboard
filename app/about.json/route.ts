@@ -9,7 +9,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
       throw new Error('Failed to fetch data');
     }
     return NextResponse.json({
-      "client": await ipAddress.json().then(res => res.data),
+      "client": "await ipAddress.json().then(res => res.data)",
       "server": {
         "current_time": await currentTime.json().then(res => res.data)
       }

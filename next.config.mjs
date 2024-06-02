@@ -12,6 +12,9 @@ const nextConfig = {
         },
       ],
     },
+  // Disable static site generation
+  // Use server-side rendering (SSR) instead
+  ssr: false,
 }
 
 export default nextConfig;
