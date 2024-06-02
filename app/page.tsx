@@ -1,10 +1,13 @@
 'use client'
 
 import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 const Page = () => {
   const router = useRouter()
-  router.push('/dashboard')
+  useEffect(() => {
+    router.replace('/dashboard')
+  })
   return <></>
 }
 
