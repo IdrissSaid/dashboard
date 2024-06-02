@@ -66,7 +66,7 @@ const FormsWidget = ({ service }: { service : IService }) => {
         theme: "light",
         transition: Bounce,
       });
-      router.push('/home')
+      router.push('/dashboard')
     }
   }
   return (
