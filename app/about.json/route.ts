@@ -5,9 +5,9 @@ export async function GET(req: NextRequest, res: NextResponse) {
     const ipAddress = await fetch(`${process.env.SERVER_HOST}/host`, { method: 'GET' });
     const currentTime = await fetch(`${process.env.SERVER_HOST}/current_time`, { method: 'GET' });
 
-    if (!ipAddress.ok) {
-      throw new Error('Failed to fetch data');
-    }
+    // if (!ipAddress.ok) {
+    //   throw new Error('Failed to fetch data');
+    // }
     return NextResponse.json({
       "client": "await ipAddress.json().then(res => res.data)",
       "server": {
