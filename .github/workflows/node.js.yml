@@ -2,9 +2,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
 
 jobs:
   build:
@@ -15,23 +15,32 @@ jobs:
       matrix:
         node-version: [18.x]
 
+    env:
+      DATABASE_URL: ${{ secrets.MONGODB_URI }}
+
     steps:
     - uses: actions/checkout@v3
-
-    - name: Install npm
-      run: npm install
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+        cache: 'pnpm'
 
     - name: Install pnpm
       run: npm install -g pnpm
+
+    - name: Add pnpm to PATH
+      run: echo "::add-path::$(npm bin -g)"
+
+    - name: Verify pnpm installation
+      run: pnpm --version
 
     - name: Install dependencies
       run: pnpm install
 
     - name: Build
-      run: pnpm run build
+      run: pnpm run build --if-present
+
+    - name: Test
+      run: pnpm test
