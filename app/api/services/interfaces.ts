@@ -11,6 +11,7 @@ export interface IWidget {
   type: string;
   method: string;
   params: IParam[];
+  results: [{}]
 }
 
 export interface IKeyValue {
@@ -18,6 +19,7 @@ export interface IKeyValue {
     key: string;
     value: string;
   }]
+  result: [{}];
   _id: string;
   createdAt: string;
   createdBy: string;
@@ -28,4 +30,9 @@ export interface IService {
   apiKey: string;
   endpoint: string;
   widgets: IWidget[];
+}
+
+export interface ISavedConfig {
+  config: [string];
+  widget: string;
 }

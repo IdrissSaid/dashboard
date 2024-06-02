@@ -4,7 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-export default function Home() {
+export default function Dashboard() {
   const router = useRouter()
   return (
     <Card className="w-1/3 h-2/3 grid shadow-lg">
@@ -21,7 +21,7 @@ export default function Home() {
           <AlertTitle>PSSST !!! Prêt à créer ton widget ?</AlertTitle>
             <AlertDescription className="flex flex-col gap-4">
               <p className="leading-7 [&:not(:first-child)]:mt-6">{"Lance-toi dans la création d\'un nouveau widget"}</p>
-              <Button onClick={() => router.push('/services')}>Commencer</Button>
+              <Button onClick={() => router.push('/dashboard/services')}>Commencer</Button>
             </AlertDescription>
           </Alert>
       </CardFooter>

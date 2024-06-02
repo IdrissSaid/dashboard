@@ -9,6 +9,22 @@ interface IParams {
   value: string;
 }
 
+function objectToArray(obj: any, prefix = '') {
+  let result: any = [];
+  for (const key in obj) {
+    if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+      result = result.concat(objectToArray(obj[key], prefix + key + '.'));
+    } else {
+      result.push([prefix + key, obj[key]]);
+    }
+  }
+  return result;
+}
+
+function getLineByKey(array: any, key: any) {
+  return array.find((item: any) => item[0] === key);
+}
+
 async function get(endpoint: string, apiKey: string, widget: IWidget, params: IParams[]) {
   const filtredParams = params.filter(item => item.key !== 'service' && item.key !== 'Widget Name' && item.key !== 'widget')
   const reqParams = filtredParams.map(item => {
@@ -29,7 +45,6 @@ async function executeWidget(endpoint: string, apiKey: string, widget: IWidget, 
 async function parseSavedServices(services: IService[], params: IParams[]) {
   const paramService = params.find(param => param.key == "service")?.value || "";
   const paramWidget = params.find(param => param.key == "widget")?.value || "";
-
   const service = services.find(service => service.name === paramService);
   if (!service) return null;
   const widget = service.widgets.find(widget => widget.name === paramWidget);
@@ -37,7 +52,43 @@ async function parseSavedServices(services: IService[], params: IParams[]) {
 
   const apiKey = Object.entries(service.apiKey).map(([key, value]) => `${key}=${value}`)[0]
   const res = await executeWidget(service.endpoint, apiKey, widget, params)
-  return await res?.json()
+  const dataArray = objectToArray(await res?.json());
+
+  let path = [] as Array<string>
+  const dataRes = [] as any
+
+  widget.results.map((result) => {
+    let key = Object.keys(result)[0];
+    let value = Object.values(result)[0] as string;
+    if (key === 'in') {
+      path.push(value)
+    } else if (key === 'out')
+      path = []
+    else {
+      if (path) {
+        let nestedProperty = path.reverse().join('.') + '.' + key;
+        let propertyValue = getLineByKey(dataArray, nestedProperty)[1]
+
+        if (value == 'boolean') {
+          const bValue = parseInt(propertyValue)
+          let vTrue = Object.values(result)[1];
+          let vFalse = Object.values(result)[2];
+          dataRes.push({[key] : bValue ? vTrue : vFalse, type: value})
+        } else
+          dataRes.push({[key] : propertyValue, type: value})
+      } else {
+        if (value == 'boolean') {
+          const bValue = parseInt(getLineByKey(dataArray, key)[1])
+          let vTrue = Object.values(result)[1];
+          let vFalse = Object.values(result)[2];
+          dataRes.push({[key] : bValue ? vTrue : vFalse, type: value})
+        } else
+          dataRes.push({[key]: getLineByKey(dataArray, key)[1], type: value})
+      }
+    }
+  })
+
+  return dataRes
 }
 
 export async function POST(req: NextRequest, res: NextResponse) {

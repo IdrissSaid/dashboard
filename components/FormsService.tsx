@@ -1,14 +1,12 @@
 "use client";
+import Loading from "@/lib/Loading";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { IService } from "@/app/api/services/interfaces";
 
 const FormsService = ({ services, onSubmit }: { services: IService[] | undefined, onSubmit: (value: string | null) => void }) => {
 
-  if (!services)
-    return (
-      <div className="w-screen h-screen justify-center items-center">Chargement de la donnée...</div>
-    )
+  if (!services) return <Loading />
 
   return (
     <Card>

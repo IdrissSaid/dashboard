@@ -12,7 +12,8 @@ const WidgetSchema = new mongoose.Schema({
   path: String,
   method: String,
   returnType: String,
-  params: [WidgetParamSchema]
+  params: [WidgetParamSchema],
+  results: [{}]
 }, {
   timestamps: true
 });

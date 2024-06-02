@@ -1,8 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { headers } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: NextRequest, res: NextResponse) {
   try {
     const ipAddress = req?.headers?.get('x-forwarded-host');
     return NextResponse.json({ data: ipAddress }, { status: 200 });
