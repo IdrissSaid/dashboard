@@ -37,6 +37,7 @@ const Login = () => {
       email: credentials.email,
       password: credentials.password,
       type: credentials.type,
+      redirect: false,
     })
     setLoading(false)
     if (res?.error) {
